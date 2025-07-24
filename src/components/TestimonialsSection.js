@@ -6,7 +6,7 @@ import { FiChevronLeft, FiChevronRight } from 'react-icons/fi'; // For navigatio
 // --- VitaGlow Realistic Indian Testimonials ---
 const testimonials = [
   {
-    quote: "VitaGlow's prescription scanner is a lifesaver for my parents. Reminders are always on time and the app is so easy to use!",
+    quote: "VitaGlow&apos;s prescription scanner is a lifesaver for my parents. Reminders are always on time and the app is so easy to use!",
     name: 'Rohit Sinha',
     title: 'Bank Manager, Boring Road, Patna',
     image: '/profilePics/rohitSinha.png',

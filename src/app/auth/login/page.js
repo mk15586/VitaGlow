@@ -164,7 +164,7 @@ export default function LoginPage() {
         {/* Footer Section */}
         <motion.div variants={itemVariants} className="mt-8 text-center text-sm text-slate-500">
           <p>
-            Don't have an account?{' '}
+            Don&apos;t have an account?{' '}
             <a href="/auth/signup" className="font-semibold text-indigo-600 hover:text-indigo-700 transition-colors duration-300">
               Sign Up
             </a>
