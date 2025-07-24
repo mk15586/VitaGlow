@@ -231,7 +231,7 @@ export default function DashboardPage() {
             variants={{ hidden: { opacity: 0, y: -20 }, visible: { opacity: 1, y: 0 } }}
             className="text-slate-500 mb-8"
           >
-            Here's your health summary for today. Stay healthy!
+            Here&apos;s your health summary for today. Stay healthy!
           </motion.p>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">

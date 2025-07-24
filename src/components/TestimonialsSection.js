@@ -140,9 +140,11 @@ const TestimonialsSection = () => {
               <FaQuoteLeft className="absolute top-6 left-6 text-4xl text-slate-200/80" />
               
               <div className="text-center flex flex-col items-center gap-6">
-                <img
+                <Image
                   src={testimonials[current].image}
                   alt={testimonials[current].name}
+                  width={96}
+                  height={96}
                   className="w-24 h-24 rounded-full object-cover border-4 border-slate-100 shadow-sm"
                 />
                 <p className="text-lg md:text-xl font-serif italic text-slate-700">

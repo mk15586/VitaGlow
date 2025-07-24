@@ -34,7 +34,7 @@ const InteractiveCard = () => {
             <div className="flex justify-between items-center">
               <p className="font-bold text-gray-800">Health Dashboard</p>
               <div className="w-10 h-10 rounded-full bg-gradient-to-r from-[#6366f1] to-[#34d399] flex items-center justify-center shadow-lg">
-                <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User" className="w-9 h-9 rounded-full border-2 border-white" />
+                <Image src="https://randomuser.me/api/portraits/women/44.jpg" alt="User" width={36} height={36} className="w-9 h-9 rounded-full border-2 border-white" />
               </div>
             </div>
             <p className="text-sm text-gray-500">Welcome, Priya!</p>

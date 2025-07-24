@@ -180,7 +180,8 @@ const DockItem = ({
       translate.set(0);
       glowIntensity.set(0);
     }
-  }, [isHovered, magnification]);
+    // Add missing dependencies
+  }, [isHovered, magnification, scale, translate, glowIntensity]);
 
   const handleClick = () => {
     if (item.id === "home" && onClick) {
