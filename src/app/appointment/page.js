@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, Fragment } from "react";
+import Image from "next/image";
 import Header from "../../components/header"; // Assuming this component exists
 import Dock from "../../components/Dock"; // Assuming this component exists
 import { Search, CalendarCheck, Hospital, Loader2, X, Star, ChevronRight, User, Stethoscope, Clock, CalendarDays } from "lucide-react";
@@ -66,7 +67,15 @@ const HospitalCard = ({ hospital, onSelect }) => (
     onClick={() => onSelect(hospital)}
   >
     <div className="w-full md:w-48 h-40 flex-shrink-0">
-      <img src={hospital.image} alt={hospital.name} className="w-full h-full object-cover rounded-xl" />
+      <Image
+        src={hospital.image}
+        alt={hospital.name}
+        width={320}
+        height={200}
+        className="w-full h-full object-cover rounded-xl"
+        style={{ objectFit: 'cover', borderRadius: '0.75rem' }}
+        priority
+      />
     </div>
     <div className="flex-1 text-center md:text-left">
       <h3 className="font-bold text-xl text-slate-800">{hospital.name}</h3>
@@ -299,11 +308,14 @@ export default function AppointmentPage() {
         </motion.div>
       </main>
 
-      <BookingModal 
-        hospital={selectedHospital}
-        isOpen={!!selectedHospital}
-        onClose={() => setSelectedHospital(null)}
-      />
+
+      {selectedHospital && (
+        <BookingModal 
+          hospital={selectedHospital}
+          isOpen={true}
+          onClose={() => setSelectedHospital(null)}
+        />
+      )}
 
       <Dock />
     </div>
