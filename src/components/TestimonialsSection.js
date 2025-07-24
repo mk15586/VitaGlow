@@ -89,7 +89,7 @@ const TestimonialsSection = () => {
             Loved by Users in Patna
           </h2>
           <p className="mt-4 text-lg text-slate-600 max-w-2xl mx-auto">
-            Don't just take our word for it. Here's what people are saying.
+            Don&apos;t just take our word for it. Here&apos;s what people are saying.
           </p>
         </div>
 
@@ -146,7 +146,7 @@ const TestimonialsSection = () => {
                   className="w-24 h-24 rounded-full object-cover border-4 border-slate-100 shadow-sm"
                 />
                 <p className="text-lg md:text-xl font-serif italic text-slate-700">
-                  "{testimonials[current].quote}"
+                  &quot;{testimonials[current].quote}&quot;
                 </p>
                 <div>
                   <h3 className="font-bold text-lg text-slate-800">
