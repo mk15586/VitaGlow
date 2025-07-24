@@ -18,12 +18,7 @@ import Dock from '../../components/Dock';
 
 // --- Enhanced Map & UI Components ---
 
-// Custom SVG Icon Creation (client-only, moved to useEffect)
-const defaultTypeVisuals = {
-  Hospital: { icon: <Hospital size={18} />, color: '#3b82f6', marker: null },
-  Pharmacy: { icon: <Pill size={18} />, color: '#16a34a', marker: null },
-  Clinic: { icon: <Stethoscope size={18} />, color: '#ec4899', marker: null },
-};
+// --- Main Page Component ---
 
 // --- Main Page Component ---
 
@@ -56,12 +51,18 @@ function haversineDistance(coords1, coords2) {
 // --- Main Page Component ---
 
 const NearbyFacilitiesPage = () => {
+    // Only color at first, no JSX or window usage
+    const initialTypeVisuals = {
+        Hospital: { icon: null, color: '#3b82f6', marker: null },
+        Pharmacy: { icon: null, color: '#16a34a', marker: null },
+        Clinic: { icon: null, color: '#ec4899', marker: null },
+    };
     const [facilities, setFacilities] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [userLocation, setUserLocation] = useState(null);
 
     // Client-only icons and visuals
-    const [typeVisuals, setTypeVisuals] = useState(defaultTypeVisuals);
+    const [typeVisuals, setTypeVisuals] = useState(initialTypeVisuals);
     const [userLocationIcon, setUserLocationIcon] = useState(null);
 
     // Filters & Sorting
