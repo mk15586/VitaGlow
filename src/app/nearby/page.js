@@ -18,29 +18,14 @@ import Dock from '../../components/Dock';
 
 // --- Enhanced Map & UI Components ---
 
-// Custom SVG Icon Creation
-const createFacilityIcon = (color) => {
-    return L.divIcon({
-        html: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8 drop-shadow-lg"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>`,
-        className: 'bg-transparent border-0',
-        iconSize: [32, 32],
-        iconAnchor: [16, 32],
-        popupAnchor: [0, -32],
-    });
+// Custom SVG Icon Creation (client-only, moved to useEffect)
+const defaultTypeVisuals = {
+  Hospital: { icon: <Hospital size={18} />, color: '#3b82f6', marker: null },
+  Pharmacy: { icon: <Pill size={18} />, color: '#16a34a', marker: null },
+  Clinic: { icon: <Stethoscope size={18} />, color: '#ec4899', marker: null },
 };
 
-const userLocationIcon = L.divIcon({
-    html: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-8 h-8"><circle cx="12" cy="12" r="10" fill="#0ea5e9" fill-opacity="0.3"/><circle cx="12" cy="12" r="6" fill="#fff" stroke="#0ea5e9" stroke-width="2"/></svg>`,
-    className: 'bg-transparent border-0',
-    iconSize: [32, 32],
-    iconAnchor: [16, 16],
-});
-
-const typeVisuals = {
-    Hospital: { icon: <Hospital size={18} />, color: '#3b82f6', marker: createFacilityIcon('#3b82f6') },
-    Pharmacy: { icon: <Pill size={18} />, color: '#16a34a', marker: createFacilityIcon('#16a34a') },
-    Clinic: { icon: <Stethoscope size={18} />, color: '#ec4899', marker: createFacilityIcon('#ec4899') },
-};
+// --- Main Page Component ---
 
 // Map Controller for smooth "flyTo" animations
 function MapFlyToController({ center, zoom }) {
@@ -74,7 +59,11 @@ const NearbyFacilitiesPage = () => {
     const [facilities, setFacilities] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [userLocation, setUserLocation] = useState(null);
-    
+
+    // Client-only icons and visuals
+    const [typeVisuals, setTypeVisuals] = useState(defaultTypeVisuals);
+    const [userLocationIcon, setUserLocationIcon] = useState(null);
+
     // Filters & Sorting
     const [searchQuery, setSearchQuery] = useState('');
     const [activeFilter, setActiveFilter] = useState('All');
@@ -84,6 +73,34 @@ const NearbyFacilitiesPage = () => {
     // UI State
     const [selectedFacilityId, setSelectedFacilityId] = useState(null);
     const listRefs = useRef({});
+
+    // Setup client-only icons after mount
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const createFacilityIcon = (color) => {
+                return L.divIcon({
+                    html: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8 drop-shadow-lg"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>`,
+                    className: 'bg-transparent border-0',
+                    iconSize: [32, 32],
+                    iconAnchor: [16, 32],
+                    popupAnchor: [0, -32],
+                });
+            };
+            setUserLocationIcon(
+                L.divIcon({
+                    html: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-8 h-8"><circle cx="12" cy="12" r="10" fill="#0ea5e9" fill-opacity="0.3"/><circle cx="12" cy="12" r="6" fill="#fff" stroke="#0ea5e9" stroke-width="2"/></svg>`,
+                    className: 'bg-transparent border-0',
+                    iconSize: [32, 32],
+                    iconAnchor: [16, 16],
+                })
+            );
+            setTypeVisuals({
+                Hospital: { icon: <Hospital size={18} />, color: '#3b82f6', marker: createFacilityIcon('#3b82f6') },
+                Pharmacy: { icon: <Pill size={18} />, color: '#16a34a', marker: createFacilityIcon('#16a34a') },
+                Clinic: { icon: <Stethoscope size={18} />, color: '#ec4899', marker: createFacilityIcon('#ec4899') },
+            });
+        }
+    }, []);
 
     // Simulate fetching data on component mount
     useEffect(() => {
@@ -209,7 +226,7 @@ const NearbyFacilitiesPage = () => {
                          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                              {['All', 'Hospital', 'Clinic', 'Pharmacy'].map(type => (
                                  <motion.button key={type} onClick={() => setActiveFilter(type)} className={`px-3 py-2 rounded-lg text-sm font-semibold transition-colors flex items-center justify-center gap-1.5 ${activeFilter === type ? 'bg-sky-500 text-white shadow' : 'bg-slate-100 hover:bg-slate-200 text-slate-600'}`}>
-                                     {typeVisuals[type]?.icon} {type}
+                                     {typeVisuals[type]?.icon || null} {type}
                                  </motion.button>
                              ))}
                          </div>
@@ -268,24 +285,29 @@ const NearbyFacilitiesPage = () => {
                     <div className="lg:col-span-2 rounded-2xl shadow-lg overflow-hidden h-full mt-4 lg:mt-0 border border-slate-200" style={{zIndex:1}}>
                         <MapContainer center={userLocation || [26.12, 85.37]} zoom={13} style={{ height: '100%', width: '100%' }} scrollWheelZoom={true}>
                             <TileLayer url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png" attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a>'/>
-                            {userLocation && <Marker position={userLocation} icon={userLocationIcon}><Popup>Your current location</Popup></Marker>}
-                            
-                            {processedFacilities.map(facility => (
-                                <Marker key={facility.id} position={facility.position} icon={typeVisuals[facility.type].marker} eventHandlers={{ click: () => setSelectedFacilityId(facility.id) }}>
-                                    <Popup>
-                                        <div className="font-sans">
-                                            <h4 className="font-bold text-md">{facility.name}</h4>
-                                            <p className="text-sm text-slate-600">{facility.type}</p>
-                                            <a 
-                                                href={`https://www.google.com/maps/dir/?api=1&origin=${userLocation ? `saddr=${userLocation.join(',')}&` : ''}daddr=${facility.position.join(',')}`} 
-                                                target="_blank" rel="noopener noreferrer"
-                                                className="flex items-center gap-1.5 mt-2 text-sky-600 font-semibold hover:underline"
-                                            >
-                                                <Navigation size={14} /> Get Directions
-                                            </a>
-                                        </div>
-                                    </Popup>
+                            {userLocation && userLocationIcon && (
+                                <Marker position={userLocation} icon={userLocationIcon}>
+                                    <Popup>Your current location</Popup>
                                 </Marker>
+                            )}
+                            {processedFacilities.map(facility => (
+                                typeVisuals[facility.type]?.marker ? (
+                                    <Marker key={facility.id} position={facility.position} icon={typeVisuals[facility.type].marker} eventHandlers={{ click: () => setSelectedFacilityId(facility.id) }}>
+                                        <Popup>
+                                            <div className="font-sans">
+                                                <h4 className="font-bold text-md">{facility.name}</h4>
+                                                <p className="text-sm text-slate-600">{facility.type}</p>
+                                                <a 
+                                                    href={`https://www.google.com/maps/dir/?api=1&origin=${userLocation ? `saddr=${userLocation.join(',')}&` : ''}daddr=${facility.position.join(',')}`} 
+                                                    target="_blank" rel="noopener noreferrer"
+                                                    className="flex items-center gap-1.5 mt-2 text-sky-600 font-semibold hover:underline"
+                                                >
+                                                    <Navigation size={14} /> Get Directions
+                                                </a>
+                                            </div>
+                                        </Popup>
+                                    </Marker>
+                                ) : null
                             ))}
                             <MapFlyToController center={mapCenter} zoom={15} />
                         </MapContainer>

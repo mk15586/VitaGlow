@@ -171,7 +171,7 @@ const Calendar = ({ selectedDate, onDateChange, events }) => {
         <button onClick={() => changeMonth(1)} className="p-2 rounded-full hover:bg-slate-100"><ChevronRight /></button>
       </div>
       <div className="grid grid-cols-7 gap-2 text-center text-sm text-slate-500 mb-2">
-        {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map(d => <div key={d}>{d}</div>)}
+        {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, i) => <div key={d + '-' + i}>{d}</div>)}
       </div>
       <div className="grid grid-cols-7 gap-2 text-center">
         {renderDays()}
